@@ -29,6 +29,8 @@ public class CapybaraEntity extends TamableAnimal {
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
 
+    public final AnimationState sittingAnimationState = new AnimationState();
+
     public CapybaraEntity(EntityType<? extends TamableAnimal> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
@@ -52,6 +54,14 @@ public class CapybaraEntity extends TamableAnimal {
             }
             return InteractionResult.sidedSuccess(this.level().isClientSide);
         }
+
+
+        if(this.isTame()) {
+            this.setOrderedToSit(!this.isOrderedToSit());
+            this.jumping = false;
+            this.navigation.stop();
+            return InteractionResult.SUCCESS;
+        }
         return super.mobInteract(pPlayer, pHand);
     }
 
@@ -59,13 +69,20 @@ public class CapybaraEntity extends TamableAnimal {
     public void tick() {
         if(this.level().isClientSide()) {
             setupAnimationStates();
+
+            if(this.isInSittingPose()) {
+                sittingAnimationState.start(80);
+            } else {
+                sittingAnimationState.stop();
+            }
+
         }
         super.tick();
     }
 
     public void setupAnimationStates() {
         if(this.idleAnimationTimeout <= 0) {
-            this.idleAnimationTimeout = this.random.nextInt(20) + 40;
+            this.idleAnimationTimeout = this.random.nextInt(40) + 80;
             this.idleAnimationState.start(this.tickCount);
         } else {
             --this.idleAnimationTimeout;

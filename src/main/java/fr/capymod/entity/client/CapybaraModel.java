@@ -61,7 +61,10 @@ public class CapybaraModel<T extends Entity> extends HierarchicalModel<T> {
 
 		if(limbSwingAmount > 0){
 			this.animateWalk(ModAnimationDefinitions.WALK, limbSwing, limbSwingAmount, 2f, 1f);
-		} else{
+		} else if(((CapybaraEntity)entity).isInSittingPose()) {
+			this.animate(((CapybaraEntity)entity).sittingAnimationState, ModAnimationDefinitions.SIT, ageInTicks, 1f);
+		}
+		else {
 			this.animate(((CapybaraEntity)entity).idleAnimationState, ModAnimationDefinitions.SLEEP, ageInTicks, 1f);
 		}
 
