@@ -5,6 +5,6 @@
     "type": "wcapy:capybara",
     "weight": 100,
     "minCount": 10,
-    "maxCount": 20
+    "maxCount": 40
   }
 }
